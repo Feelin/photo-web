@@ -8,18 +8,28 @@ var koa = require('koa');
 var path = require('path');
 var app = module.exports = koa();
 
-// Logger
+
+
+//Logger
 app.use(logger());
+
+// Serve static files
+//app.use(serve(path.join(__dirname, 'public')));
+
+// Compress
+//app.use(compress());
+
+var assetsHost = app.env == 'production' ? 'http://121.40.228.45' : 'http://localhost';
+
+app.use(function *(next) {
+    this.assetsHost = assetsHost;
+    this.set('assetsHost',assetsHost);
+    yield next;
+});
 
 app.use(route.get('/', get.home));
 
-// Serve static files
-app.use(serve(path.join(__dirname, 'public')));
-
-// Compress
-app.use(compress());
-
 if (!module.parent) {
   app.listen(3000);
-  console.log('listening on port 3000');
+  console.log('listening on port 3000 in ' + app.env);
 }
