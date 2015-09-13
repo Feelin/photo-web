@@ -7,6 +7,7 @@ var route = require('koa-route');
 var koa = require('koa');
 var path = require('path');
 var app = module.exports = koa();
+var config = require('./config');
 
 
 
@@ -19,7 +20,7 @@ app.use(logger());
 // Compress
 //app.use(compress());
 
-var assetsHost = app.env == 'production' ? 'http://121.40.228.45' : 'http://localhost';
+var assetsHost = app.env == 'production' ? config.ip: 'http://localhost';
 
 app.use(function *(next) {
     this.assetsHost = assetsHost;
@@ -28,6 +29,7 @@ app.use(function *(next) {
 });
 
 app.use(route.get('/', get.home));
+app.use(route.get('/admin', get.admin));
 
 if (!module.parent) {
   app.listen(3000);
