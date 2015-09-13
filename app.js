@@ -8,7 +8,7 @@ var koa = require('koa');
 var path = require('path');
 var app = module.exports = koa();
 var config = require('./config');
-
+serve = require('koa-static-folder');
 
 
 //Logger
@@ -28,8 +28,11 @@ app.use(function *(next) {
     yield next;
 });
 
+app.use(serve('./public'));
+
 app.use(route.get('/', get.home));
 app.use(route.get('/admin', get.admin));
+app.use(route.get('/aboutus', get.aboutus));
 
 if (!module.parent) {
   app.listen(3000);

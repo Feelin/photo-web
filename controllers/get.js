@@ -8,7 +8,8 @@ var q = require('q');
 
 var render = views(__dirname + '/../views', {
   map: { html: 'swig' },
-  cache:false
+  cache:false,
+  layout: 'layout',
 });
 
 
@@ -33,9 +34,11 @@ module.exports.admin = function *admin() {
       //   console.log(dom.attr("src").replace("{{ assetsHost }}",this.assetsHost))
       //   dom.attr("src").replace("{{ assetsHost }}",this.assetsHost);
       // });
-      $("a").each(function(){
-        $(this).append("<input type='text' class='admin-input'></input>");
+      $("a").each(function(i){
+        var text = $(this).text();
+        $(this).append("<input type='text' data-id='"+i+"' class='admin-input' placeholder='"+text+"'></input>");
       })
+      $("body").append('<script type="text/javascript" src="public/scripts/admin.js"></script>')
       var output = '<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">' + window.$("html").html() + '</html>';
       console.log("there have been", window.$("a").length, "nodejs releases!");
       deferred.resolve(output);
@@ -53,3 +56,26 @@ module.exports.admin = function *admin() {
     return false;
   }
 };
+
+
+
+module.exports.aboutus = function *aboutus() {
+  this.body = yield render('aboutus',{'assetsHost':this.assetsHost});
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
