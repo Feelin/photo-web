@@ -1,0 +1,24 @@
+.nav_btm h3{
+  padding-top: 0;
+}
+.indexTitle{
+  text-align: center;
+  width: 100%;
+  font-size: 20px !important;
+  font-weight: bold;
+}
+.header_1 h3{
+  padding-top: 0;
+}
+.head_new {
+  background:#84d8d1;
+}
+.nav_new dl dt a{
+  border-bottom:1px #fff solid;
+}
+.scorollNav{
+  background: #46c4b9;
+}
+.admin-input{
+  position: absolute;
+}
