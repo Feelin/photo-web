@@ -1,0 +1,36 @@
+{% extends 'adminLayout.html' %}
+{% block content %}
+
+<div class="jumbotron">
+  <h1>{{ data.title}}</h1>
+  <p>{{data.description}}</p>
+
+    <form action="">
+    <div class="input-group">
+        <input id="fileupload" type="file" name="uploadFile"
+               data-url="http://121.40.228.45:8080/wedding/wedding/api/pictures/upload" multiple>
+    </div>
+        <br/>
+        <!--<button type="submit" class="btn btn-success">保存</button>-->
+    </form>
+</div>
+
+<script src="/public/scripts/jquery.ui.widget.js"></script>
+<script src="/public/scripts/jquery.iframe-transport.js"></script>
+<script src="/public/scripts/jquery.fileupload.js"></script>
+<script type="text/javascript">
+    console.log("{{ data.id }}")
+    $("#fileupload").fileupload({
+        dataType: 'json',
+        formData:{
+            "albumId":parseInt("{{ data.id }}")
+        },
+        done:function(e,res){
+
+        }
+    })
+
+</script>
+
+{% endblock %}
+
