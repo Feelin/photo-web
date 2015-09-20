@@ -61,58 +61,99 @@ module.exports.home = function *home() {
       }
     });
   });
-  var data = yield [p1,p2,p3];
+   var p4 = new Promise(function(resolve,reject){
+    request.post('http://121.40.228.45:8080/wedding/wedding/api/pictures/getAlbumPictures',  {form:{
+      albumId:-1
+    }},function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        resolve(body);
+      }
+      else{
+        reject(error)
+      }
+    });
+  });
+  var data = yield [p1,p2,p3,p4];
   data[0] = (JSON.parse(data[0]));
   data[1] = (JSON.parse(data[1]));
   data[2] = (JSON.parse(data[2]));
-  console.log(data[0].result)
+  data[3] = (JSON.parse(data[3]));
+  console.log(data[3])
   this.body = yield render('index',{'assetsHost':this.assetsHost,data:data});
 };
 
-module.exports.admin = function *admin() {
-  var that = this;
-  if(this.request.query.passwork == config.korwssap){
 
-    var deferred = q.defer();
-    var page_template = fs.readFileSync('views/index.html','utf-8');
 
-    jsdom.env("http://121.40.228.45:3000/", [
-      'http://cdn.bootcss.com/jquery/3.0.0-alpha1/jquery.min.js',
-      {'assetsHost':this.assetsHost}
-    ],
-    function(errors, window) {
-      var $ = window.$;
-      // window.$("script").each(function(i,dom){
-      //   console.log(dom.attr("src").replace("{{ assetsHost }}",this.assetsHost))
-      //   dom.attr("src").replace("{{ assetsHost }}",this.assetsHost);
-      // });
-      $("a").each(function(i){
-        var text = $(this).text();
-        $(this).append("<input type='text' data-id='"+i+"' class='admin-input' placeholder='"+text+"'></input>");
-      })
-      $("body").append('<script type="text/javascript" src="public/scripts/admin.js"></script>')
-      var output = '<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">' + window.$("html").html() + '</html>';
-      deferred.resolve(output);
+module.exports.piclist = function *piclist() {
 
+  var req = this.request.query;
+  var p = new Promise(function(resolve,reject){
+    request.post('http://121.40.228.45:8080/wedding/wedding/api/pictures/getAlbumPictures',  {form:{
+      albumId:req.albumId
+    }},function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        resolve(body);
+      }
+      else{
+        reject(error)
+      }
     });
+  });
 
-    that.body = yield deferred.promise;
-    //that.body = yield render("admin",{'assetsHost':this.assetsHost});
-
-
-
-
-  }
-  else{
-    return false;
-  }
+  var data = JSON.parse(yield p);
+  console.log(data)
+  this.body = yield render("piclist",{'assetsHost':this.assetsHost,pics:data.result})
 };
-
 
 
 module.exports.aboutus = function *aboutus() {
   this.body = yield render('aboutus',{'assetsHost':this.assetsHost});
 };
+
+module.exports.wenhua = function *wenhua() {
+  this.body = yield render('wenhua',{'assetsHost':this.assetsHost});
+};
+
+module.exports.albumList = function *albumList() {
+  var req = this.request.query;
+  var p = new Promise(function(resolve,reject){
+    request.post('http://121.40.228.45:8080/wedding/wedding/api/album/getAlbums',  {form:{
+      moduleId:req.id
+    }},function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        resolve(body);
+      }
+      else{
+        reject(error)
+      }
+    });
+  });
+
+  var data = JSON.parse(yield p);
+  console.log(data)
+  this.body = yield render('albumList',{'assetsHost':this.assetsHost,"data":data.result});
+};
+
+
+module.exports.priceList = function *priceList() {
+  var p = new Promise(function(resolve,reject){
+    request.post('http://121.40.228.45:8080/wedding/wedding/api/pictures/getAlbumPictures',  {form:{
+      albumId:-1
+    }},function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        resolve(body);
+      }
+      else{
+        reject(error)
+      }
+    });
+  });
+
+  var data = JSON.parse(yield p);
+  console.log(data)
+  this.body = yield render('priceList',{'assetsHost':this.assetsHost,"data":data.result});
+};
+//////////////admin
 
 module.exports.save = function *save() {
   if(this.request.query.passwork != config.korwssap){
@@ -205,12 +246,13 @@ module.exports.list = function *list() {
 };
 
 
-module.exports.piclist = function *piclist() {
-
-  var req = this.request.query;
+module.exports.price = function *price() {
+  if(this.request.query.passwork != config.korwssap){
+    return false
+  }
   var p = new Promise(function(resolve,reject){
     request.post('http://121.40.228.45:8080/wedding/wedding/api/pictures/getAlbumPictures',  {form:{
-      albumId:req.albumId
+      albumId:-1
     }},function (error, response, body) {
       if (!error && response.statusCode == 200) {
         resolve(body);
@@ -223,10 +265,8 @@ module.exports.piclist = function *piclist() {
 
   var data = JSON.parse(yield p);
   console.log(data)
-  this.body = yield render("piclist",{'assetsHost':this.assetsHost,pics:data.result})
+  this.body = yield render("price",{'assetsHost':this.assetsHost,pics:data.result})
 };
-
-
 
 
 

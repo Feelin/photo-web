@@ -1,0 +1,112 @@
+{% extends 'layout.html' %}
+{% block content %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(window).scroll(function () {
+            if ($(window).scrollTop() > $(".loveshow").offset().top - 250) {
+                txttop();
+            }
+        });
+        function txttop() {
+            var txt = $(".Innovation").attr("id") + "";
+            if (txt.length <= 7) {
+                var temp = "";
+                for (var v = 0; v < 7 - txt.length; v++) {
+                    temp += "0";
+                }
+                txt = temp + txt + "";
+                var arr = new Array();
+                arr = txt.split("");
+                for (var n = arr.length; n >= 0; n--) {
+                    var obj = $(".Innovation li img").eq(n);
+                    var s = arr[n];
+                    dayanimate(obj, s);
+                }
+            }
+            function dayanimate(obj, s) {
+                var hights = -954;
+                var time = 800;
+                obj.animate({ top: s * hights }, s * time, function () { });
+            }
+        }
+    });
+</script>
+
+<script>
+    $(function() {
+        var
+                speed = 500,   // animation speed
+                $wall = $('.guest').find('.pin'),
+                masonryOptions = {         // initial masonry options
+                    columnWidth: 1,
+                    itemSelector: '.box:not(.invis)',
+                    animate: false,
+                    animationOptions: {
+                        duration: speed,
+                        queue: false
+                    }
+                }
+                ;
+
+        // run on window.load so we can capture any incoming hashes
+        $(window).load(function() {
+            // run masonry on start-up to capture all the boxes we'll need
+            $wall.masonry(masonryOptions);
+            if (window.location.hash) {
+                // get rid of the '#' from the hash
+                var possibleFilterClass = window.location.hash.replace('#', '');
+                switch (possibleFilterClass) {
+                    // if the hash matches the following words
+                    case 'all':case 'c1': case 'c2': case 'c3': case 'c4':
+                    // set masonry options animate to false
+                    masonryOptions.animate = false;
+                    // hide boxes that don't match the filter class
+                    $wall.children().not('.' + possibleFilterClass)
+                            .toggleClass('invis').hide();
+                    // run masonry again, this time with the necessary stuff hidden
+                    $wall.masonry(masonryOptions);
+                    break;
+                }
+            }
+
+        });
+
+    });
+</script>
+<!--[if lte IE 6]>
+<script src="/theme/common/banie6.js" type="text/javascript"></script>
+<![endif]-->
+</head>
+
+
+<body>
+
+
+<div class="inner">
+    {% for album in data %}
+    <div class="showcase">
+        <div class="bigImg">><img width="100%" src="http://121.40.228.45/upload{{album.link}}"
+                /><div><small>{{album.subTitle}}</small><b>{{album.title}}</b><p>{{album.description}}</p></div></div>
+    </div>
+    {% endfor %}
+
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+
+            $(".bigImg").hover(function(){
+
+                $(this).find("div").stop().animate({bottom:"0"},500)
+
+            },function(){
+
+                $(this).find("div").stop().animate({bottom:"-161px"},500)
+
+            })
+
+        })
+
+    </script>
+
+</div>
+{% endblock %}

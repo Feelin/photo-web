@@ -1,0 +1,83 @@
+{% extends 'adminLayout.html' %}
+{% block content %}
+
+<div class="container">
+    <div class="jumbotron">
+    <h1>创建套餐</h1>
+        <form action="" id="priceForm" enctype="multipart/form-data">
+            <br>
+            <input type="hidden" value="-1" name="albumId"/>
+            <div class="input-group">
+                <span class="input-group-addon">标题</span>
+                <input type="text" class="form-control" name="title" id="title" placeholder="标题">
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">价格</span>
+                <input type="text" class="form-control" name="subTitle" id="subTitle" placeholder="价格">
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">描述</span>
+                <input type="text" class="form-control" name="description" id="description" placeholder="描述">
+            </div>
+            <br/>
+            <div class="input-group">
+                <input id="fileupload" type="file" name="uploadFile"
+                       data-url="http://121.40.228.45:8080/wedding/wedding/api/pictures/upload" multiple>
+            </div>
+            <br/>
+        </form>
+    </div>
+
+    <div class="container">
+        {% for pic in pics%}
+        <button type="button pull-right" class="btn btn-danger del-pic-btn" data-id="{{pic.id}}">删除套餐</button>
+        <div class="clear"></div>
+        <div>
+            <img style="width: 100%" class="pic {% if pic.type == "index"%}index{% endif%}"
+            src="http://121.40.228.45/upload{{pic.link}}" data-id="{{ pic.id}}"/>
+        </div>
+        <div class="clear"></div>
+        <br/>
+        {% endfor %}
+    </div>
+</div>
+<script src="/public/scripts/jquery.ui.widget.js"></script>
+<script src="/public/scripts/jquery.iframe-transport.js"></script>
+<script src="/public/scripts/jquery.fileupload.js"></script>
+<script type="text/javascript">
+    $("#fileupload").fileupload({
+        dataType: 'json',
+        done:function(e,res){
+            window.location.reload();
+        }
+    });
+    $('#fileupload').bind('fileuploadsubmit', function (e, data) {
+        var formData = $('#priceForm').serializeArray();
+        console.log(formData)
+        data.formData = formData;
+    });
+//$(".submit-btn").on("click",function(){
+//    var formData = new FormData($("#priceForm")[0]);
+//    $.post({
+//        url:"http://121.40.228.45:8080/wedding/wedding/api/pictures/upload",
+//        data:formData
+//    }).done(function(){
+//            window.location.reload();
+//    });
+//});
+    $(".del-pic-btn").on("click",function(){
+        var id = $(this).data("id");
+        $.post({
+            url:"http://121.40.228.45:8080/wedding/wedding/api/pictures/delete",
+            data:{id:id}
+        }).done(function(res){
+            window.location.reload();
+        });
+    });
+
+</script>
+
+{% endblock %}
+
