@@ -1,6 +1,11 @@
 {% extends 'adminLayout.html' %}
 {% block content %}
-
+<style>
+.index{
+    border: 10px solid #00d6b2;
+}
+</style>
+<div class="container">
 <div class="jumbotron">
   <h1>{{ data.title}}</h1>
   <p>{{data.description}}</p>
@@ -15,21 +20,51 @@
     </form>
 </div>
 
+<div class="container">
+    {% for pic in picData%}
+    <button type="button pull-right" class="btn btn-danger del-pic-btn" data-id="{{pic.id}}">删除图片</button>
+    <div class="clear"></div>
+    <div>
+        <img style="width: 100%" class="pic {% if pic.type == "index"%}index{% endif%}"
+        src="http://121.40.228.45/upload{{pic.link}}" data-id="{{ pic.id}}"/>
+    </div>
+    <div class="clear"></div>
+    <br/>
+    {% endfor %}
+</div>
+</div>
 <script src="/public/scripts/jquery.ui.widget.js"></script>
 <script src="/public/scripts/jquery.iframe-transport.js"></script>
 <script src="/public/scripts/jquery.fileupload.js"></script>
 <script type="text/javascript">
-    console.log("{{ data.id }}")
     $("#fileupload").fileupload({
         dataType: 'json',
         formData:{
             "albumId":parseInt("{{ data.id }}")
         },
         done:function(e,res){
-
+            window.location.reload();
         }
-    })
+    });
+    $(".del-pic-btn").on("click",function(){
+        var id = $(this).data("id");
+        $.post({
+            url:"http://121.40.228.45:8080/wedding/wedding/api/pictures/delete",
+            data:{id:id}
+        }).done(function(res){
+            window.location.reload()
+        })
+    });
+    $(".pic").on("click",function(){
+        var id = $(this).data("id");
+        $.post({
+            url:"http://121.40.228.45:8080/wedding/wedding/api/pictures/index",
+            data:{id:id}
+        }).done(function(res){
+            window.location.reload()
+        })
 
+    })
 </script>
 
 {% endblock %}

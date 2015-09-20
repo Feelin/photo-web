@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+{% for pic in pics%}
+<img src="http://121.40.228.45/upload{{pic.link}}" width="100%"/>
+
+{% endfor%}
+
+{% endblock %}

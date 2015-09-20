@@ -37,6 +37,8 @@ app.use(route.get('/admin', get.admin));
 app.use(route.get('/aboutus', get.aboutus));
 app.use(route.get('/save', get.save));
 app.use(route.get('/upload', get.upload));
+app.use(route.get('/list', get.list));
+app.use(route.get('/piclist', get.piclist));
 
 if (!module.parent) {
   app.listen(3000);
