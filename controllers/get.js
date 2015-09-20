@@ -78,7 +78,6 @@ module.exports.home = function *home() {
   data[1] = (JSON.parse(data[1]));
   data[2] = (JSON.parse(data[2]));
   data[3] = (JSON.parse(data[3]));
-  console.log(data[3])
   this.body = yield render('index',{'assetsHost':this.assetsHost,data:data});
 };
 
@@ -101,7 +100,6 @@ module.exports.piclist = function *piclist() {
   });
 
   var data = JSON.parse(yield p);
-  console.log(data)
   this.body = yield render("piclist",{'assetsHost':this.assetsHost,pics:data.result})
 };
 
@@ -130,7 +128,6 @@ module.exports.albumList = function *albumList() {
   });
 
   var data = JSON.parse(yield p);
-  console.log(data)
   this.body = yield render('albumList',{'assetsHost':this.assetsHost,"data":data.result});
 };
 
@@ -150,7 +147,6 @@ module.exports.priceList = function *priceList() {
   });
 
   var data = JSON.parse(yield p);
-  console.log(data)
   this.body = yield render('priceList',{'assetsHost':this.assetsHost,"data":data.result});
 };
 //////////////admin
@@ -193,7 +189,6 @@ module.exports.upload = function *upload()
     });
     data = JSON.parse(yield p1).result[0];
   }
-console.log(data)
   var p2 = new Promise(function(resolve,reject){
     request.post('http://121.40.228.45:8080/wedding/wedding/api/pictures/getAlbumPictures',  {form:{
       albumId:data.id
@@ -209,8 +204,6 @@ console.log(data)
   });
 
   var picData =JSON.parse( yield p2).result;
-
-  console.log(picData)
 
   this.body = yield render('upload',{
     'assetsHost':this.assetsHost,
@@ -241,7 +234,6 @@ module.exports.list = function *list() {
   });
 
   var data =  JSON.parse( yield p );
-  console.log(data)
   this.body = yield render("albums",{list:data.result,moduleId:req.moduleId})
 };
 
@@ -264,7 +256,6 @@ module.exports.price = function *price() {
   });
 
   var data = JSON.parse(yield p);
-  console.log(data)
   this.body = yield render("price",{'assetsHost':this.assetsHost,pics:data.result})
 };
 
